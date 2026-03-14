@@ -2,13 +2,28 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import API from '../api/axios';
 import gsap from 'gsap';
-import { FaGamepad, FaTrophy, FaUsers, FaChartBar, FaArrowRight } from 'react-icons/fa';
+import { toast } from 'react-toastify';
+import { FaGamepad, FaTrophy, FaUsers, FaChartBar, FaArrowRight, FaSync } from 'react-icons/fa';
 
 const AdminMatchStatsPage = () => {
   const navigate = useNavigate();
   const pageRef = useRef(null);
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [backfilling, setBackfilling] = useState(false);
+
+  const handleBackfill = async () => {
+    if (!window.confirm('سيتم إعادة احتساب نقاط جميع المباريات من قاعدة البيانات واضافة جميع المستخدمين للمتصدرين. هل تريد المتابعة؟')) return;
+    setBackfilling(true);
+    try {
+      const { data } = await API.post('/match/admin/backfill-points');
+      toast.success(`تم بنجاح! تم إضافة ${data.seeded} مستخدم جديد وإعادة احتساب ${data.recalculated} سجل نقاط`);
+    } catch (err) {
+      toast.error('حدث خطأ أثناء الإصلاح: ' + (err.response?.data?.message || err.message));
+    } finally {
+      setBackfilling(false);
+    }
+  };
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -68,6 +83,22 @@ const AdminMatchStatsPage = () => {
           <FaGamepad className="text-primary-400" />
           إحصائيات المباريات
         </h1>
+
+        {/* Backfill/Repair button */}
+        <div className="glass-card p-4 mb-6 flex items-center justify-between border-l-4 border-amber-400">
+          <div>
+            <p className="text-white font-bold">إصلاح نقاط المباريات</p>
+            <p className="text-dark-400 text-sm mt-1">يُعيد احتساب نقاط جميع المباريات المسجلة ويضيف المستخدمين الذين لا يظهرون في المتصدرين</p>
+          </div>
+          <button
+            onClick={handleBackfill}
+            disabled={backfilling}
+            className="btn-primary flex items-center gap-2 whitespace-nowrap"
+          >
+            <FaSync className={backfilling ? 'animate-spin' : ''} />
+            {backfilling ? 'جاري الإصلاح...' : 'إصلاح النقاط الآن'}
+          </button>
+        </div>
 
         {/* Stats Cards */}
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4 mb-8">
