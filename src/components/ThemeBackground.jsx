@@ -3,7 +3,8 @@ import { useTheme } from '../context/ThemeContext';
 
 // ─── Matrix Rain (Programming) ────────────────────────────────────
 const drawMatrix = (canvas, ctx, color) => {
-  const cols = Math.floor(canvas.width / 18);
+  const isMobile = window.innerWidth < 768;
+  const cols = Math.floor(canvas.width / (isMobile ? 24 : 18));
   const drops = Array(cols).fill(1);
   const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノ01{};()=>?!#@ABCDEFabcdef';
 
@@ -37,12 +38,13 @@ const drawMatrix = (canvas, ctx, color) => {
 
 // ─── Network Nodes (Networks) ─────────────────────────────────────
 const drawNodes = (canvas, ctx, color) => {
-  const nodeCount = 55;
+  const isMobile = window.innerWidth < 768;
+  const nodeCount = isMobile ? 20 : 55; // Huge optimization for mobile!
   const nodes = Array.from({ length: nodeCount }, () => ({
     x: Math.random() * canvas.width,
     y: Math.random() * canvas.height,
-    vx: (Math.random() - 0.5) * 0.5,
-    vy: (Math.random() - 0.5) * 0.5,
+    vx: (isMobile ? 0.3 : 0.5) * (Math.random() - 0.5),
+    vy: (isMobile ? 0.3 : 0.5) * (Math.random() - 0.5),
     r: Math.random() * 3 + 1.5,
     pulse: Math.random() * Math.PI * 2,
   }));
@@ -98,7 +100,11 @@ const drawNodes = (canvas, ctx, color) => {
 // ─── Signal Waves (Communications) ───────────────────────────────
 const drawWaves = (canvas, ctx, color) => {
   let t = 0;
-  const centers = [
+  const isMobile = window.innerWidth < 768;
+
+  const centers = isMobile ? [
+    { x: canvas.width * 0.5, y: canvas.height * 0.5, speed: 0.8 },
+  ] : [
     { x: canvas.width * 0.25, y: canvas.height * 0.5, speed: 0.8 },
     { x: canvas.width * 0.75, y: canvas.height * 0.5, speed: 1.1 },
     { x: canvas.width * 0.5,  y: canvas.height * 0.3, speed: 0.6 },
@@ -109,7 +115,9 @@ const drawWaves = (canvas, ctx, color) => {
     t += 0.012;
 
     centers.forEach(center => {
-      for (let ring = 0; ring < 5; ring++) {
+      // Less rings on mobile
+      const ringCount = isMobile ? 3 : 5;
+      for (let ring = 0; ring < ringCount; ring++) {
         const radius = ((t * center.speed * 120 + ring * 60) % 400);
         const alpha = Math.max(0, 0.28 - radius / 500);
         if (alpha <= 0) continue;

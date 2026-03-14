@@ -51,34 +51,36 @@ function App() {
         {!isAuthPage && <Navbar />}
         {!isAuthPage && <GlobalMatchNotification />}
         
-        <Routes>
-          <Route path="/login" element={!user ? <LoginPage /> : <Navigate to={user.onboarded ? '/dashboard' : '/onboarding'} />} />
-          <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to={user.onboarded ? '/dashboard' : '/onboarding'} />} />
-          
-          <Route path="/onboarding" element={
-            <ProtectedRoute requireOnboarded={false}>
-              <OnboardingPage />
-            </ProtectedRoute>
-          } />
-          
-          <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
-          <Route path="/exam" element={<ProtectedRoute><ExamPage /></ProtectedRoute>} />
-          <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
-          <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
-          <Route path="/match" element={<ProtectedRoute><MatchPage /></ProtectedRoute>} />
-          <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
-          <Route path="/farewell" element={<FarewellPage />} />
+        <main className={`flex-1 w-full ${!isAuthPage ? 'pt-20 pb-8' : ''}`}>
+          <Routes>
+            <Route path="/login" element={!user ? <LoginPage /> : <Navigate to={user.onboarded ? '/dashboard' : '/onboarding'} />} />
+            <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to={user.onboarded ? '/dashboard' : '/onboarding'} />} />
+            
+            <Route path="/onboarding" element={
+              <ProtectedRoute requireOnboarded={false}>
+                <OnboardingPage />
+              </ProtectedRoute>
+            } />
+            
+            <Route path="/dashboard" element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
+            <Route path="/exam" element={<ProtectedRoute><ExamPage /></ProtectedRoute>} />
+            <Route path="/results" element={<ProtectedRoute><ResultsPage /></ProtectedRoute>} />
+            <Route path="/leaderboard" element={<ProtectedRoute><LeaderboardPage /></ProtectedRoute>} />
+            <Route path="/match" element={<ProtectedRoute><MatchPage /></ProtectedRoute>} />
+            <Route path="/profile" element={<ProtectedRoute><ProfilePage /></ProtectedRoute>} />
+            <Route path="/farewell" element={<FarewellPage />} />
 
-          {/* Admin Routes */}
-          <Route path="/admin" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
-          <Route path="/admin/questions" element={<AdminRoute><AdminQuestionsPage /></AdminRoute>} />
-          <Route path="/admin/student/:id" element={<AdminRoute><AdminStudentDetailsPage /></AdminRoute>} />
-          <Route path="/admin/ai-import" element={<AdminRoute><AdminAIImportPage /></AdminRoute>} />
-          <Route path="/admin/matches" element={<AdminRoute><AdminMatchStatsPage /></AdminRoute>} />
+            {/* Admin Routes */}
+            <Route path="/admin" element={<AdminRoute><AdminDashboardPage /></AdminRoute>} />
+            <Route path="/admin/questions" element={<AdminRoute><AdminQuestionsPage /></AdminRoute>} />
+            <Route path="/admin/student/:id" element={<AdminRoute><AdminStudentDetailsPage /></AdminRoute>} />
+            <Route path="/admin/ai-import" element={<AdminRoute><AdminAIImportPage /></AdminRoute>} />
+            <Route path="/admin/matches" element={<AdminRoute><AdminMatchStatsPage /></AdminRoute>} />
 
-          <Route path="/" element={<Navigate to={user ? (user.role === 'admin' ? '/admin' : (user.onboarded ? '/dashboard' : '/onboarding')) : '/login'} />} />
-          <Route path="*" element={<Navigate to="/" />} />
-        </Routes>
+            <Route path="/" element={<Navigate to={user ? (user.role === 'admin' ? '/admin' : (user.onboarded ? '/dashboard' : '/onboarding')) : '/login'} />} />
+            <Route path="*" element={<Navigate to="/" />} />
+          </Routes>
+        </main>
         {!isAuthPage && <Footer />}
       </div>
     </ThemeProvider>
