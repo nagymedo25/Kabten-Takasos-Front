@@ -15,8 +15,9 @@ export const SocketProvider = ({ children }) => {
 
   useEffect(() => {
     if (user && user._id && user.role !== 'admin') {
-      // Connect directly to the backend to avoid Vite proxy websocket drops
-      const newSocket = io('http://localhost:5000', {
+      // Connect directly to the backend
+      const socketUrl = import.meta.env.VITE_SOCKET_URL || 'http://localhost:5000';
+      const newSocket = io(socketUrl, {
         transports: ['websocket', 'polling'],
         reconnection: true,
         reconnectionAttempts: Infinity,
