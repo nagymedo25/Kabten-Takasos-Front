@@ -2,7 +2,6 @@ import { useState, useEffect, useRef, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
-import gsap from 'gsap';
 import API from '../api/axios';
 import { FaClock, FaArrowLeft, FaArrowRight, FaCheck, FaPaperPlane } from 'react-icons/fa';
 
@@ -76,12 +75,7 @@ const ExamPage = () => {
     return () => clearInterval(timer);
   }, [examStarted]);
 
-  // GSAP on question change
-  useEffect(() => {
-    if (questions.length > 0) {
-      gsap.fromTo('.question-card', { x: 30, opacity: 0 }, { x: 0, opacity: 1, duration: 0.4, ease: 'power2.out' });
-    }
-  }, [currentIndex, questions.length]);
+  // No GSAP animation on question change (removed for mobile performance)
 
   const formatTime = (seconds) => {
     const m = Math.floor(seconds / 60);
@@ -238,20 +232,20 @@ const ExamPage = () => {
   if (!q) return null;
 
   const renderMultipleChoice = () => (
-    <div className="space-y-4" dir="ltr">
+    <div className="space-y-2 md:space-y-4" dir="ltr">
       {(q.options || []).map((opt, i) => {
         const isSelected = answers[q._id] === opt;
         return (
           <button
             key={i}
             onClick={() => setAnswer(q._id, opt)}
-            className={`w-full flex items-center p-5 rounded-2xl border-2 transition-all duration-300 group ${
+            className={`w-full flex items-center p-3 md:p-5 rounded-xl border-2 group ${
               isSelected
-                ? 'border-primary-500 bg-primary-500/20 text-white shadow-lg shadow-primary-500/20 translate-x-2'
+                ? 'border-primary-500 bg-primary-500/20 text-white shadow-lg shadow-primary-500/20'
                 : 'border-dark-600 bg-dark-800/95 text-dark-100 hover:border-dark-400 hover:bg-dark-700 hover:text-white'
             }`}
           >
-            <div className={`flex items-center justify-center w-10 h-10 rounded-xl mr-5 font-bold text-lg shadow-inner transition-colors duration-300 ${
+            <div className={`flex items-center justify-center w-7 h-7 md:w-10 md:h-10 rounded-lg md:rounded-xl mr-3 md:mr-5 font-bold text-sm md:text-lg shadow-inner ${
               isSelected ? 'bg-primary-500 text-white' : 'bg-dark-700 text-dark-300 group-hover:bg-dark-600'
             }`}>
               {String.fromCharCode(65 + i)}
@@ -432,32 +426,32 @@ const ExamPage = () => {
       )}
 
       {/* ─── EXAM LAYER ─── */}
-      <div className={`max-w-4xl mx-auto py-8 transition-opacity duration-700 ${showCountdown ? 'opacity-0' : 'opacity-100'}`}>
+      <div className={`max-w-4xl mx-auto py-3 md:py-8 ${showCountdown ? 'opacity-0' : 'opacity-100'}`}>
         {/* Header Summary */}
-        <div className="flex flex-wrap items-center justify-between bg-dark-900/80 border border-dark-600/50 p-4 rounded-2xl mb-8 md:backdrop-blur-md shadow-xl">
-          <div className="flex items-center gap-4">
-            <div className="bg-dark-800 font-bold px-4 py-2 rounded-xl text-primary-400 border border-dark-600">
-              السؤال {currentIndex + 1} <span className="text-dark-400 font-normal px-2">من</span> {questions.length}
+        <div className="flex flex-wrap items-center justify-between bg-dark-900/80 border border-dark-600/50 p-2 md:p-4 rounded-xl mb-4 md:mb-8 md:backdrop-blur-md shadow-xl">
+          <div className="flex items-center gap-2 md:gap-4">
+            <div className="bg-dark-800 font-bold px-2 py-1 md:px-4 md:py-2 rounded-lg text-primary-400 border border-dark-600 text-sm">
+              {currentIndex + 1} <span className="text-dark-400 font-normal px-1">من</span> {questions.length}
             </div>
-            <div className="hidden sm:block text-dark-300 font-medium">
-              نوع السؤال: <span className="text-white bg-dark-700 px-3 py-1 rounded-lg mr-2 text-sm border border-dark-600">{typeLabels[q.questionType]}</span>
+            <div className="hidden sm:block text-dark-300 font-medium text-sm">
+              <span className="text-white bg-dark-700 px-2 py-1 rounded-lg border border-dark-600 text-xs">{typeLabels[q.questionType]}</span>
             </div>
           </div>
-          <div className="flex items-center gap-3 px-5 py-2.5 rounded-xl border-2 transition-colors border-emerald-500/50 bg-emerald-900/10 text-emerald-400">
-            <FaClock className="animate-pulse" />
-            <span className="font-mono text-xl font-bold tracking-wider">{formatTime(timeElapsed)}</span>
+          <div className="flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl border-2 border-emerald-500/50 bg-emerald-900/10 text-emerald-400">
+            <FaClock className="text-xs md:text-base" />
+            <span className="font-mono text-base md:text-xl font-bold tracking-wider">{formatTime(timeElapsed)}</span>
           </div>
         </div>
 
         {/* Progress Timeline */}
-        <div className="mb-10 px-2 relative">
-          <div className="w-full h-1.5 bg-dark-800 rounded-full overflow-hidden mb-4 shadow-inner">
+        <div className="mb-4 md:mb-10 px-1 relative">
+          <div className="w-full h-1.5 bg-dark-800 rounded-full overflow-hidden mb-2 md:mb-4 shadow-inner">
             <div
-              className="h-full bg-gradient-to-l from-primary-500 to-primary-600 rounded-full transition-all duration-500 shadow-[0_0_10px_rgba(var(--theme-primary),0.5)]"
+              className="h-full bg-gradient-to-l from-primary-500 to-primary-600 rounded-full"
               style={{ width: `${((currentIndex + 1) / questions.length) * 100}%` }}
             />
           </div>
-          <div className="flex items-center gap-1.5 flex-wrap justify-between w-full h-6 transition-all duration-700">
+          <div className="flex items-center gap-1 flex-nowrap justify-between w-full h-4">
             {questions.map((_, i) => (
               <button
                 key={i}
@@ -472,12 +466,12 @@ const ExamPage = () => {
                   }
                   setCurrentIndex(i);
                 }}
-                className={`flex-1 max-w-[1.5rem] rounded-full mx-auto transition-all duration-300 ${
+                className={`flex-1 rounded-full mx-auto ${
                   i === currentIndex
-                    ? 'h-3 bg-primary-500 shadow-lg shadow-primary-500/40' // Active
+                    ? 'h-2.5 bg-primary-500'
                     : answers[questions[i]._id]
-                      ? 'h-2 bg-emerald-500 opacity-60 hover:opacity-100 focus:opacity-100 cursor-pointer' // Answered
-                      : 'h-1.5 bg-dark-600 hover:bg-dark-500 cursor-pointer opacity-30 hover:opacity-100 hover:h-2' // Unanswered
+                      ? 'h-1.5 bg-emerald-500 opacity-70 cursor-pointer'
+                      : 'h-1 bg-dark-600 cursor-pointer opacity-30'
                 }`}
               />
             ))}
@@ -485,28 +479,24 @@ const ExamPage = () => {
         </div>
 
         {/* The Question Area */}
-        <div className="question-card bg-dark-900/95 md:backdrop-blur-xl relative p-8 md:p-12 mb-8 rounded-3xl border-2 border-dark-600 border-t-4 border-t-primary-500 overflow-hidden shadow-2xl">
-          {/* Subtle BG Glow */}
-          <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 blur-3xl rounded-full pointer-events-none"></div>
-
-          <h2 className="text-2xl md:text-3xl font-bold text-white mb-10 leading-relaxed font-sans" dir="ltr">
+        <div className="question-card bg-dark-900/95 md:backdrop-blur-xl relative p-4 md:p-12 mb-4 md:mb-8 rounded-2xl border-2 border-dark-600 border-t-4 border-t-primary-500 overflow-hidden shadow-xl">
+          <h2 className="text-lg md:text-3xl font-bold text-white mb-5 md:mb-10 leading-relaxed font-sans" dir="ltr">
             {q.questionText}
           </h2>
-          
           <div className="relative z-10 w-full">
             {renderQuestion()}
           </div>
         </div>
 
         {/* Action Bar */}
-        <div className="flex items-center justify-between pb-10">
+        <div className="flex items-center justify-between pb-6 md:pb-10">
           <button
             onClick={() => setCurrentIndex(prev => Math.max(0, prev - 1))}
             disabled={currentIndex === 0}
-            className="btn-secondary flex items-center gap-3 px-6 py-4 rounded-2xl disabled:opacity-20 hover:-translate-x-1 border-2 border-dark-600 bg-dark-800 hover:bg-dark-700 transition-all text-white"
+            className="flex items-center gap-1 md:gap-3 px-3 py-2 md:px-6 md:py-4 rounded-xl text-sm md:text-base bg-dark-800 border border-dark-600 hover:bg-dark-700 text-white transition-colors disabled:opacity-20"
           >
             <FaArrowRight />
-            <span className="font-bold">السؤال السابق</span>
+            <span className="font-bold hidden sm:inline">السابق</span>
           </button>
 
           {currentIndex === questions.length - 1 ? (
@@ -514,13 +504,13 @@ const ExamPage = () => {
               <button
                 onClick={handleSubmit}
                 disabled={submitting || !isQuestionAnswered(q)}
-                className="btn-primary flex items-center gap-3 px-8 py-4 rounded-2xl disabled:opacity-50 disabled:cursor-not-allowed hover:shadow-lg hover:shadow-primary-500/30 transition-all font-bold text-lg"
+                className="btn-primary flex items-center gap-2 px-4 py-2.5 md:px-8 md:py-4 rounded-xl disabled:opacity-50 disabled:cursor-not-allowed font-bold text-sm md:text-lg"
               >
                 <FaPaperPlane />
-                {submitting ? 'جاري الإرسال وتصحيح الإجابات...' : 'إنهاء وإرسال الاختبار'}
+                {submitting ? 'جاري الإرسال...' : 'إرسال الاختبار'}
               </button>
               {!isQuestionAnswered(q) && (
-                <span className="text-red-400 text-sm mt-3 animate-pulse">يجب تأكيد الإجابة لإرسال التقييم النهائي</span>
+                <span className="text-red-400 text-xs mt-2">يجب تأكيد الإجابة أولاً</span>
               )}
             </div>
           ) : (
@@ -528,13 +518,13 @@ const ExamPage = () => {
               <button
                 onClick={() => setCurrentIndex(prev => Math.min(questions.length - 1, prev + 1))}
                 disabled={!isQuestionAnswered(q)}
-                className="btn-primary flex items-center gap-3 px-8 py-4 rounded-2xl border-2 border-primary-600 shadow-xl disabled:opacity-30 disabled:cursor-not-allowed hover:translate-x-1 transition-all font-bold"
+                className="btn-primary flex items-center gap-1 md:gap-3 px-3 py-2 md:px-8 md:py-4 rounded-xl disabled:opacity-30 disabled:cursor-not-allowed font-bold text-sm md:text-base"
               >
-                <span>السؤال التالي</span>
+                <span>التالي</span>
                 <FaArrowLeft />
               </button>
               {!isQuestionAnswered(q) && (
-                <span className="text-red-400 text-xs mt-3 opacity-80">يرجى تسجيل إجابة كشرط للاستمرار</span>
+                <span className="text-red-400 text-xs mt-2 opacity-80">يرجى الإجابة أولاً</span>
               )}
             </div>
           )}
