@@ -109,42 +109,42 @@ const LeaderboardPage = () => {
         ) : (
           <div className="space-y-2">
             {/* Header */}
-            <div className="grid grid-cols-12 gap-4 px-4 py-2 text-dark-400 text-sm font-bold">
-              <div className="col-span-1">الترتيب</div>
-              <div className="col-span-7">اسم الطالب</div>
-              <div className="col-span-2 text-center">الاختبارات</div>
-              <div className="col-span-2 text-center">إجمالي النقاط</div>
+            <div className="grid grid-cols-12 gap-2 md:gap-4 px-2 md:px-4 py-2 text-dark-400 text-[10px] md:text-sm font-bold uppercase tracking-wider">
+              <div className="col-span-2 md:col-span-1 text-center">#</div>
+              <div className="col-span-7 md:col-span-7">الطالب</div>
+              <div className="hidden md:block md:col-span-2 text-center">الاختبارات</div>
+              <div className="col-span-3 md:col-span-2 text-center">النقاط</div>
             </div>
 
             {/* Rows */}
             {leaderboard.map((entry, i) => (
               <div
                 key={entry.userId}
-                className={`lb-row glass-card grid grid-cols-12 gap-4 items-center px-4 py-4 transition-all duration-300 hover:border-primary-500/30 ${getRankBg(i)} ${
-                  entry.userId === user?._id ? 'ring-1 ring-primary-500/30' : ''
+                className={`lb-row glass-card grid grid-cols-12 gap-2 md:gap-4 items-center px-2 md:px-4 py-3 md:py-4 transition-all duration-300 hover:border-primary-500/30 ${getRankBg(i)} ${
+                  entry.userId === user?._id ? 'ring-1 ring-primary-500/30 bg-primary-500/5' : ''
                 }`}
               >
-                <div className="col-span-1 flex items-center justify-center">
+                <div className="col-span-2 md:col-span-1 flex items-center justify-center">
                   {getRankIcon(i)}
                 </div>
-                <div className="col-span-7 flex items-center gap-3">
+                <div className="col-span-7 md:col-span-7 flex items-center gap-2 md:gap-3">
                   <UserAvatar
                     name={entry.fullName}
                     image={entry.profileImage}
-                    size="w-10 h-10"
-                    textSize="text-sm"
+                    size="w-8 h-8 md:w-10 md:h-10"
+                    textSize="text-[10px] md:text-sm"
                     className="shadow-lg shadow-primary-500/20"
                   />
-                  <div>
-                    <p className="text-white font-bold text-sm">{entry.fullName}</p>
-                    <p className="text-dark-400 text-xs" dir="ltr">@{entry.username}</p>
+                  <div className="min-w-0">
+                    <p className="text-white font-bold text-xs md:text-sm truncate">{entry.fullName}</p>
+                    <p className="text-dark-400 text-[10px] md:text-xs truncate" dir="ltr">@{entry.username}</p>
                   </div>
                 </div>
-                <div className="col-span-2 text-center text-dark-300 text-sm">{entry.totalExams}</div>
-                <div className={`col-span-2 text-center font-bold text-lg ${
+                <div className="hidden md:block md:col-span-2 text-center text-dark-300 text-sm">{entry.totalExams}</div>
+                <div className={`col-span-3 md:col-span-2 text-center font-bold text-base md:text-lg ${
                   i < 3 ? 'text-amber-400' : 'text-primary-400'
                 }`}>
-                  {entry.totalPoints} <span className="text-xs text-dark-400">نقطة</span>
+                  {entry.totalPoints} <span className="text-[10px] md:text-xs text-dark-400 block md:inline-block">نقطة</span>
                 </div>
               </div>
             ))}

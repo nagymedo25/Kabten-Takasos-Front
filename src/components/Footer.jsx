@@ -74,10 +74,9 @@ const Footer = () => {
         </div>
 
         {/* Floating Farewell Button */}
-        <Link to="/farewell" className="absolute bottom-4 right-4 sm:bottom-6 sm:right-8 flex items-center justify-center gap-2 px-4 sm:px-6 py-2 sm:py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full shadow-[0_0_20px_rgba(16,185,129,0.5)] animate-bounce hover:scale-105 transition-all z-50 ring-2 ring-emerald-400/50">
-          <FaHeart className="text-pink-300 animate-ping absolute inset-0 m-auto opacity-50 text-3xl" />
-          <FaHeart className="text-pink-200 relative z-10 animate-pulse" />
-          <span className="text-xs sm:text-sm whitespace-nowrap relative z-10 text-shadow-sm shadow-black">اضغط هنا يا صديقي كده</span>
+        <Link to="/farewell" className="absolute bottom-3 right-3 sm:bottom-6 sm:right-8 flex items-center justify-center gap-1.5 sm:gap-2 px-3 sm:px-6 py-1.5 sm:py-3 bg-gradient-to-r from-emerald-500 to-teal-600 text-white font-bold rounded-full shadow-[0_0_15px_rgba(16,185,129,0.4)] hover:scale-105 transition-all z-50 ring-2 ring-emerald-400/50 max-w-[180px] sm:max-w-none">
+          <FaHeart className="text-pink-200 relative z-10 text-xs sm:text-sm" />
+          <span className="text-xs sm:text-sm relative z-10">اضغط هنا يا صديقي</span>
         </Link>
       </div>
     </footer>

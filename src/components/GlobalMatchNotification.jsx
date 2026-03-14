@@ -68,8 +68,8 @@ const GlobalMatchNotification = () => {
   if (!isVisible || !matchRequest) return null;
 
   return (
-    <div className="fixed bottom-6 right-6 z-[100] global-match-popup shadow-2xl">
-      <div className="bg-dark-900 border-2 border-primary-500 rounded-2xl p-5 w-80 relative overflow-hidden md:backdrop-blur-xl bg-opacity-90">
+    <div className="fixed bottom-0 left-0 right-0 sm:bottom-6 sm:right-6 sm:left-auto z-[100] global-match-popup shadow-2xl p-4 sm:p-0">
+      <div className="bg-dark-900 border-2 border-primary-500 rounded-2xl p-4 sm:p-5 w-full sm:w-80 relative overflow-hidden md:backdrop-blur-xl bg-opacity-95">
         {/* Glow effect */}
         <div className="absolute top-0 left-0 w-full h-1 bg-gradient-to-r from-primary-500 to-primary-600"></div>
         <div className="absolute -right-10 -top-10 w-32 h-32 bg-primary-500/10 rounded-full blur-2xl animate-pulse"></div>
