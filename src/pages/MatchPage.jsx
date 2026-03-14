@@ -41,6 +41,7 @@ const MatchPage = () => {
 
   // Manage Anthem audio
   useEffect(() => {
+    let audioTimer;
     if (!audioRef.current) {
       audioRef.current = new Audio(AnthemAudio);
       audioRef.current.loop = true;
@@ -48,14 +49,18 @@ const MatchPage = () => {
     }
 
     if (matchPhase === 'lobby') {
-      audioRef.current.play().catch(e => console.log('Audio autoplay blocked by browser', e));
+      audioTimer = setTimeout(() => {
+        audioRef.current?.play().catch(e => console.log('Audio autoplay blocked by browser', e));
+      }, 3000);
     } else {
-      audioRef.current.pause();
-      // Optionally reset to start when they return to lobby:
-      audioRef.current.currentTime = 0;
+      if (audioRef.current) {
+        audioRef.current.pause();
+        audioRef.current.currentTime = 0;
+      }
     }
 
     return () => {
+      clearTimeout(audioTimer);
       if (audioRef.current) {
         audioRef.current.pause();
       }
@@ -301,10 +306,8 @@ const MatchPage = () => {
         {/* Hero Section: Title (Right) + Warrior Image (Left) */}
         <div className="flex flex-col-reverse md:flex-row items-center justify-between mb-12 relative w-full bg-dark-800/60 rounded-[3rem] p-6 md:p-12 border border-amber-500/20 shadow-2xl overflow-hidden glass-card">
           
-          {/* Confined Sun-like Golden Glow - Extra Bright! */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[200%] bg-[radial-gradient(ellipse,_rgba(250,204,21,0.45)_0%,_rgba(251,146,60,0.3)_30%,_rgba(217,119,6,0.15)_60%,_transparent_90%)] blur-[60px] pointer-events-none z-0 mix-blend-screen"></div>
-          {/* Secondary Core Sun to pop the brightness in the center */}
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[150%] h-[100%] bg-[radial-gradient(ellipse,_rgba(254,240,138,0.4)_0%,_transparent_50%)] blur-[30px] pointer-events-none z-0 mix-blend-screen"></div>
+          {/* Confined Sun-like Golden Glow - Extra Bright! Optimized for mobile */}
+          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-full h-[200%] bg-[radial-gradient(ellipse,_rgba(250,204,21,0.3)_0%,_rgba(251,146,60,0.15)_40%,_transparent_80%)] pointer-events-none z-0"></div>
 
           {/* Text Section (Right side in RTL) */}
           <div className="match-header flex-1 text-center md:text-right relative z-10 mt-8 md:mt-0">
@@ -321,21 +324,20 @@ const MatchPage = () => {
           <div className="relative w-[220px] h-[220px] sm:w-[280px] sm:h-[280px] flex items-center justify-center shrink-0 z-10">
             
             {/* Outer Spinning Ornaments */}
-            <div className="absolute w-[105%] h-[105%] rounded-full border-[2px] border-dashed border-yellow-400/40 animate-[spin_40s_linear_infinite] pointer-events-none"></div>
-            <div className="absolute w-[95%] h-[95%] rounded-full border-[1px] border-amber-500/50 animate-[spin_25s_linear_reverse_infinite] pointer-events-none"></div>
+            <div className="absolute w-[105%] h-[105%] rounded-full border-[2px] border-dashed border-yellow-400/30 animate-[spin_40s_linear_infinite] pointer-events-none"></div>
             
             {/* Massive Glowing Magic Rings */}
-            <div className="absolute w-[112%] h-[112%] rounded-full border-t-[4px] border-l-[2px] border-yellow-400 border-b-transparent border-r-transparent animate-[spin_5s_linear_infinite] shadow-[0_0_20px_rgba(250,204,21,1)] pointer-events-none opacity-90 drop-shadow-[0_0_10px_#fde047]"></div>
+            <div className="absolute w-[112%] h-[112%] rounded-full border-t-[4px] border-l-[2px] border-yellow-400 border-b-transparent border-r-transparent animate-[spin_5s_linear_infinite] pointer-events-none opacity-80"></div>
             
-            <div className="absolute w-[122%] h-[122%] rounded-full border-b-[6px] border-r-[3px] border-amber-600 border-t-transparent border-l-transparent animate-[spin_7s_linear_reverse_infinite] shadow-[0_0_30px_rgba(217,119,6,1)] pointer-events-none opacity-80 drop-shadow-[0_0_10px_#f59e0b]"></div>
+            <div className="absolute w-[122%] h-[122%] rounded-full border-b-[6px] border-r-[3px] border-amber-600 border-t-transparent border-l-transparent animate-[spin_7s_linear_reverse_infinite] pointer-events-none opacity-70"></div>
             
             {/* Background Inner Core Glow */}
-            <div className="absolute w-full h-full rounded-full bg-yellow-500/20 blur-[40px] pointer-events-none"></div>
+            <div className="absolute w-full h-full rounded-full bg-yellow-500/20 blur-md pointer-events-none"></div>
 
             {/* Perfectly Round Image Core - Thinner border */}
-            <div className="w-[88%] h-[88%] rounded-full overflow-hidden border-[3px] shadow-[0_0_50px_rgba(251,191,36,0.5)] relative z-10 box-border bg-dark-900 border-[#fbbf24]">
+            <div className="w-[88%] h-[88%] rounded-full overflow-hidden border-[3px] shadow-[0_0_20px_rgba(251,191,36,0.3)] relative z-10 box-border bg-dark-900 border-[#fbbf24]">
               <img src={MoahrebImg} alt="محارب كابتن تخصص" className="w-full h-full object-cover object-center scale-110" />
-              <div className="absolute inset-0 shadow-[inset_0_0_50px_rgba(0,0,0,0.8)] pointer-events-none"></div>
+              <div className="absolute inset-0 shadow-[inset_0_0_30px_rgba(0,0,0,0.8)] pointer-events-none"></div>
               <div className="absolute inset-x-0 bottom-0 h-1/3 bg-gradient-to-t from-black/80 to-transparent pointer-events-none"></div>
             </div>
 
