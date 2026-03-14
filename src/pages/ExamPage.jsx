@@ -406,7 +406,7 @@ const ExamPage = () => {
     <div ref={pageRef} className="page-container relative min-h-screen">
       {/* ─── COUNTDOWN LAYER ─── */}
       {showCountdown && (
-        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/90 backdrop-blur-xl">
+        <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/90 md:backdrop-blur-xl">
           <div className="absolute inset-0 bg-gradient-to-br from-primary-500/10 to-transparent"></div>
           <div className="relative z-10 flex flex-col items-center text-center">
             <h1 className="text-4xl md:text-5xl font-bold text-white mb-8 tracking-wide animate-slideUp">
@@ -434,7 +434,7 @@ const ExamPage = () => {
       {/* ─── EXAM LAYER ─── */}
       <div className={`max-w-4xl mx-auto py-8 transition-opacity duration-700 ${showCountdown ? 'opacity-0' : 'opacity-100'}`}>
         {/* Header Summary */}
-        <div className="flex flex-wrap items-center justify-between bg-dark-900/80 border border-dark-600/50 p-4 rounded-2xl mb-8 backdrop-blur-md shadow-xl">
+        <div className="flex flex-wrap items-center justify-between bg-dark-900/80 border border-dark-600/50 p-4 rounded-2xl mb-8 md:backdrop-blur-md shadow-xl">
           <div className="flex items-center gap-4">
             <div className="bg-dark-800 font-bold px-4 py-2 rounded-xl text-primary-400 border border-dark-600">
               السؤال {currentIndex + 1} <span className="text-dark-400 font-normal px-2">من</span> {questions.length}
@@ -485,7 +485,7 @@ const ExamPage = () => {
         </div>
 
         {/* The Question Area */}
-        <div className="question-card bg-dark-900/95 backdrop-blur-xl relative p-8 md:p-12 mb-8 rounded-3xl border-2 border-dark-600 border-t-4 border-t-primary-500 overflow-hidden shadow-2xl">
+        <div className="question-card bg-dark-900/95 md:backdrop-blur-xl relative p-8 md:p-12 mb-8 rounded-3xl border-2 border-dark-600 border-t-4 border-t-primary-500 overflow-hidden shadow-2xl">
           {/* Subtle BG Glow */}
           <div className="absolute top-0 right-0 w-64 h-64 bg-primary-500/5 blur-3xl rounded-full pointer-events-none"></div>
 

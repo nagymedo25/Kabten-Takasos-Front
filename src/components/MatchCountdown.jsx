@@ -106,7 +106,7 @@ const MatchCountdown = ({ onComplete, player1, player2, difficulty }) => {
   }, [phase]);
 
   return (
-    <div ref={overlayRef} className="fixed inset-0 z-[100] flex items-center justify-center bg-dark-950/95 backdrop-blur-3xl overflow-hidden">
+    <div ref={overlayRef} className="fixed inset-0 z-[100] flex items-center justify-center bg-dark-950/95 md:backdrop-blur-3xl overflow-hidden">
       
       {/* Dynamic Dramatic Lighting */}
       <div className="absolute top-0 right-0 w-1/2 h-full bg-gradient-to-l from-primary-600/10 to-transparent pointer-events-none mix-blend-screen.animate-pulse"></div>
@@ -184,7 +184,7 @@ const MatchCountdown = ({ onComplete, player1, player2, difficulty }) => {
       )}
 
       {phase === 'done' && (
-        <div className="relative z-50 w-full h-full flex items-center justify-center bg-emerald-900/40 backdrop-blur-sm">
+        <div className="relative z-50 w-full h-full flex items-center justify-center bg-emerald-900/40 md:backdrop-blur-sm">
           <div className="text-8xl md:text-[150px] font-black text-transparent bg-clip-text bg-gradient-to-b from-emerald-200 to-emerald-600 animate-bounce" style={{ textShadow: '0 20px 80px rgba(16, 185, 129, 0.8)'}}>
             انطــلق !
           </div>

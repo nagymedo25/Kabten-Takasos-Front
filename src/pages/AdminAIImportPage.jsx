@@ -281,7 +281,7 @@ const AdminAIImportPage = () => {
 
       {/* Edit Modal */}
       {editingIndex !== null && editFormData && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 backdrop-blur-sm animate-fadeIn">
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/60 md:backdrop-blur-sm animate-fadeIn">
           <div className="glass-card w-full max-w-2xl max-h-[90vh] flex flex-col shadow-2xl overflow-hidden">
             <div className="p-4 border-b border-dark-700 flex items-center justify-between bg-dark-800/50">
               <h3 className="text-lg font-bold text-white flex items-center gap-2">

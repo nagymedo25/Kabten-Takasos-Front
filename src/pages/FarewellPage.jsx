@@ -8,6 +8,9 @@ const FarewellPage = () => {
   const pageRef = useRef(null);
 
   useEffect(() => {
+    const isMobile = window.innerWidth < 768;
+    if (isMobile) return;
+
     const ctx = gsap.context(() => {
       // Animate the text blocks
       gsap.fromTo(
@@ -16,7 +19,7 @@ const FarewellPage = () => {
         { y: 0, opacity: 1, duration: 1, stagger: 0.3, ease: 'power3.out' }
       );
 
-      // Animate the floating flowers
+      // Animate the floating flowers (desktop only)
       gsap.utils.toArray('.floating-flower').forEach((flower) => {
         gsap.to(flower, {
           y: 'random(-100, 100)',
@@ -39,8 +42,8 @@ const FarewellPage = () => {
       {/* Dynamic Background with Gradient */}
       <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,185,129,0.1),transparent_50%),radial-gradient(circle_at_bottom_left,rgba(236,72,153,0.1),transparent_50%)] pointer-events-none"></div>
 
-      {/* Floating Flowers Background */}
-      <div className="absolute inset-0 overflow-hidden pointer-events-none z-0">
+      {/* Floating Flowers Background - desktop only */}
+      <div className="hidden md:block absolute inset-0 overflow-hidden pointer-events-none z-0">
         {[...Array(40)].map((_, i) => (
           <div
             key={i}
@@ -80,7 +83,7 @@ const FarewellPage = () => {
         {/* Prayer for Mahmoud */}
         <div className="reveal-element w-full max-w-2xl relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-emerald-500 to-teal-500 rounded-[2rem] blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
-          <div className="relative bg-dark-800/80 backdrop-blur-xl ring-1 ring-white/10 p-8 rounded-[2rem] shadow-2xl">
+          <div className="relative bg-dark-800/80 md:backdrop-blur-xl ring-1 ring-white/10 p-8 rounded-[2rem] shadow-2xl">
             <h3 className="text-2xl font-bold text-center text-emerald-400 mb-6 flex items-center justify-center gap-2">
               <FaStar className="text-amber-400" /> دعوة لمحمود <FaStar className="text-amber-400" />
             </h3>
@@ -104,7 +107,7 @@ const FarewellPage = () => {
         {/* Prayer for Everyone */}
         <div className="reveal-element w-full max-w-2xl relative group">
           <div className="absolute -inset-1 bg-gradient-to-r from-amber-500 to-pink-500 rounded-[2rem] blur opacity-30 group-hover:opacity-60 transition duration-1000 group-hover:duration-200"></div>
-          <div className="relative bg-dark-800/80 backdrop-blur-xl ring-1 ring-white/10 p-8 rounded-[2rem] shadow-2xl">
+          <div className="relative bg-dark-800/80 md:backdrop-blur-xl ring-1 ring-white/10 p-8 rounded-[2rem] shadow-2xl">
             <h3 className="text-2xl font-bold text-center text-amber-400 mb-6 flex items-center justify-center gap-2">
               <FaPray className="text-pink-400" /> دعوة لدفعة سنة ثالثة كلها <FaPray className="text-pink-400" />
             </h3>

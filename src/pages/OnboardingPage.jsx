@@ -100,7 +100,7 @@ const OnboardingPage = () => {
           >
             <div className={`w-20 h-20 mx-auto rounded-2xl bg-gradient-to-br ${dept.color} flex items-center justify-center text-white mb-6 shadow-lg group-hover:scale-110 transition-transform duration-300 relative`}>
               {loadingDept === dept.id ? (
-                <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-2xl backdrop-blur-sm">
+                <div className="absolute inset-0 flex items-center justify-center bg-black/30 rounded-2xl">
                   <div className="animate-spin rounded-full h-8 w-8 border-t-2 border-b-2 border-white"></div>
                 </div>
               ) : null}

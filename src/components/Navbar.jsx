@@ -44,7 +44,7 @@ const Navbar = () => {
   const links = user?.role === 'admin' ? adminLinks : studentLinks;
 
   return (
-    <nav ref={navRef} className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-dark-700/50 backdrop-blur-2xl">
+    <nav ref={navRef} className="fixed top-0 left-0 right-0 z-50 glass-card border-b border-dark-700/50 md:backdrop-blur-2xl">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="flex items-center justify-between h-16">
           {/* Logo */}

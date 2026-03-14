@@ -1,4 +1,4 @@
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useTheme } from '../context/ThemeContext';
 
 // ─── Matrix Rain (Programming) ────────────────────────────────────
@@ -151,9 +151,16 @@ const ThemeBackground = () => {
   const { theme } = useTheme();
   const canvasRef = useRef(null);
   const rafRef = useRef(null);
+  const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
   useEffect(() => {
-    if (!theme || theme.type === 'default') return;
+    const handleResize = () => setIsMobile(window.innerWidth < 768);
+    window.addEventListener('resize', handleResize);
+    return () => window.removeEventListener('resize', handleResize);
+  }, []);
+
+  useEffect(() => {
+    if (!theme || theme.type === 'default' || isMobile) return;
 
     const canvas = canvasRef.current;
     if (!canvas) return;
@@ -183,9 +190,9 @@ const ThemeBackground = () => {
       cancelAnimationFrame(rafRef.current);
       window.removeEventListener('resize', resize);
     };
-  }, [theme?.type, theme?.particleColor]);
+  }, [theme?.type, theme?.particleColor, isMobile]);
 
-  if (!theme || theme.type === 'default') return null;
+  if (!theme || theme.type === 'default' || isMobile) return null;
 
   return (
     <canvas
