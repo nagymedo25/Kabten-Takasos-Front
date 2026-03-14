@@ -3,7 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
 import { toast } from 'react-toastify';
 import API from '../api/axios';
-import { FaClock, FaArrowLeft, FaArrowRight, FaCheck, FaPaperPlane } from 'react-icons/fa';
+import { FaClock, FaArrowLeft, FaArrowRight, FaCheck, FaPaperPlane, FaStop } from 'react-icons/fa';
 
 const ExamPage = () => {
   const { user } = useAuth();
@@ -16,6 +16,7 @@ const ExamPage = () => {
   const [loading, setLoading] = useState(true);
   const [submitting, setSubmitting] = useState(false);
   const [timeElapsed, setTimeElapsed] = useState(0);
+  const [showEndConfirm, setShowEndConfirm] = useState(false);
   const [examStarted, setExamStarted] = useState(false);
   
   // Countdown states
@@ -144,9 +145,10 @@ const ExamPage = () => {
     return true; // For multiple choice, true_false
   };
 
-  const handleSubmit = useCallback(async () => {
+  const handleSubmit = useCallback(async (earlyEnd = false) => {
     if (submitting) return;
     setSubmitting(true);
+    setShowEndConfirm(false);
 
     try {
       let correct = 0;
@@ -154,7 +156,13 @@ const ExamPage = () => {
       const topicMap = {};
       const answerDetails = [];
 
-      questions.forEach(q => {
+      // Only evaluate questions up to (and including) the current one if earlyEnd,
+      // otherwise evaluate ALL questions
+      const questionsToEvaluate = earlyEnd
+        ? questions.slice(0, currentIndex + 1)
+        : questions;
+
+      questionsToEvaluate.forEach(q => {
         const userAnswer = answers[q._id] || '';
         const topic = q.topic || 'General';
 
@@ -190,8 +198,8 @@ const ExamPage = () => {
         });
       });
 
-      const total = questions.length;
-      const percentage = Math.round((correct / total) * 100);
+      const total = questionsToEvaluate.length;
+      const percentage = total > 0 ? Math.round((correct / total) * 100) : 0;
       const timeSpent = timeElapsed;
 
       const result = {
@@ -218,7 +226,7 @@ const ExamPage = () => {
     } finally {
       setSubmitting(false);
     }
-  }, [answers, questions, submitting, user, navigate]);
+  }, [answers, questions, currentIndex, submitting, user, navigate, timeElapsed]);
 
   if (loading) {
     return (
@@ -398,6 +406,36 @@ const ExamPage = () => {
 
   return (
     <div ref={pageRef} className="page-container relative min-h-screen">
+      {/* ─── EARLY END CONFIRMATION MODAL ─── */}
+      {showEndConfirm && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-dark-950/80 backdrop-blur-sm">
+          <div className="relative bg-dark-900 border-2 border-red-500/40 rounded-2xl p-6 md:p-8 max-w-sm w-[90%] shadow-2xl shadow-red-500/10 text-center">
+            <div className="w-16 h-16 rounded-full bg-red-500/10 border-2 border-red-500/30 flex items-center justify-center mx-auto mb-4">
+              <FaStop className="text-red-400 text-2xl" />
+            </div>
+            <h2 className="text-xl font-bold text-white mb-2">إنهاء الاختبار مبكراً؟</h2>
+            <p className="text-dark-300 text-sm mb-1">
+              أجبت على <span className="text-primary-400 font-bold">{Object.keys(answers).length}</span> من أصل <span className="text-white font-bold">{questions.length}</span> سؤال.
+            </p>
+            <p className="text-dark-400 text-xs mb-6">ستُحتسب فقط الأسئلة التي تم الوصول إليها حتى الآن في نتيجتك.</p>
+            <div className="flex gap-3">
+              <button
+                onClick={() => setShowEndConfirm(false)}
+                className="flex-1 py-2.5 rounded-xl border border-dark-600 bg-dark-800 text-white font-bold text-sm hover:bg-dark-700 transition-colors"
+              >
+                إلغاء
+              </button>
+              <button
+                onClick={() => handleSubmit(true)}
+                disabled={submitting}
+                className="flex-1 py-2.5 rounded-xl bg-red-500/20 border border-red-500/40 text-red-400 hover:bg-red-500 hover:text-white font-bold text-sm transition-all disabled:opacity-50"
+              >
+                {submitting ? 'جاري الإرسال...' : 'تأكيد الإنهاء'}
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
       {/* ─── COUNTDOWN LAYER ─── */}
       {showCountdown && (
         <div className="fixed inset-0 z-50 flex flex-col items-center justify-center bg-dark-950/90 md:backdrop-blur-xl">
@@ -437,9 +475,22 @@ const ExamPage = () => {
               <span className="text-white bg-dark-700 px-2 py-1 rounded-lg border border-dark-600 text-xs">{typeLabels[q.questionType]}</span>
             </div>
           </div>
-          <div className="flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl border-2 border-emerald-500/50 bg-emerald-900/10 text-emerald-400">
-            <FaClock className="text-xs md:text-base" />
-            <span className="font-mono text-base md:text-xl font-bold tracking-wider">{formatTime(timeElapsed)}</span>
+          <div className="flex items-center gap-2 md:gap-3">
+            {/* Early End Button */}
+            <button
+              onClick={() => setShowEndConfirm(true)}
+              title="إنهاء الاختبار الآن"
+              className="flex items-center gap-1.5 px-2 py-1.5 md:px-3 md:py-2 rounded-lg border border-red-500/30 bg-red-500/10 text-red-400 hover:bg-red-500/20 hover:border-red-500/60 transition-all text-xs md:text-sm font-bold"
+            >
+              <FaStop className="text-[10px] md:text-xs" />
+              <span className="hidden sm:inline">إنهاء الاختبار</span>
+              <span className="sm:hidden">إنهاء</span>
+            </button>
+            {/* Timer */}
+            <div className="flex items-center gap-2 px-3 py-1.5 md:px-5 md:py-2.5 rounded-xl border-2 border-emerald-500/50 bg-emerald-900/10 text-emerald-400">
+              <FaClock className="text-xs md:text-base" />
+              <span className="font-mono text-base md:text-xl font-bold tracking-wider">{formatTime(timeElapsed)}</span>
+            </div>
           </div>
         </div>
 
